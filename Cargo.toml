@@ -7,3 +7,7 @@ authors = ["Michal 'vorner' Vaner <vorner@vorner.cz>"]
 arc-swap = "~0.1"
 lazy_static = "~1"
 log = "~0.4"
+
+[dev-dependencies]
+fern = "~0.5"
+version-sync = "~0.5"
