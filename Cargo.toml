@@ -10,6 +10,11 @@ keywords = ["logging"]
 categories = ["development-tools::debugging"]
 license = "Apache-2.0/MIT"
 
+[badges]
+travis-ci = { repository = "vorner/log-reroute" }
+appveyor = { repository = "vorner/log-reroute" }
+maintenance = { status = "actively-developed" }
+
 [dependencies]
 arc-swap = "~0.1"
 lazy_static = "~1"
