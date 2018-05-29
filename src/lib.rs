@@ -15,6 +15,7 @@
 //! #[macro_use]
 //! extern crate log;
 //! extern crate log_reroute;
+//! extern crate tempfile;
 //!
 //! use std::fs::OpenOptions;
 //!
@@ -31,12 +32,7 @@
 //!     log_reroute::reroute_boxed(early_logger);
 //!     info!("This one goes to stderr");
 //!     // Load file name from config and log to that file
-//!     let file = OpenOptions::new()
-//!         .create(true)
-//!         .write(true)
-//!         .append(true)
-//!         .open("/dev/null")
-//!         .expect("Failed to write log file");
+//!     let file = tempfile::tempfile().unwrap();
 //!     let logger = Dispatch::new().chain(file).into_log().1;
 //!     log_reroute::reroute_boxed(logger);
 //!     info!("And this one to the file");
