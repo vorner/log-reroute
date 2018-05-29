@@ -2,6 +2,13 @@
 name = "log-reroute"
 version = "0.1.0"
 authors = ["Michal 'vorner' Vaner <vorner@vorner.cz>"]
+description = "Support to change logging target for the log crate"
+documentation = "https://docs.rs/log-reroute"
+repository = "https://github.com/vorner/log-reroute"
+readme = "README.md"
+keywords = ["logging"]
+categories = ["development-tools::debugging"]
+license = "Apache-2.0/MIT"
 
 [dependencies]
 arc-swap = "~0.1"
