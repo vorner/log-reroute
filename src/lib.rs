@@ -1,4 +1,6 @@
-#![doc(html_root_url = "https://docs.rs/log-reroute/0.1.0/log-reroute/")]
+#![doc(
+    html_root_url = "https://docs.rs/log-reroute/0.1.0/log-reroute/", test(attr(deny(warnings)))
+)]
 #![deny(missing_docs)]
 
 //! Crate to reroute logging messages at runtime.
@@ -16,8 +18,6 @@
 //! extern crate log;
 //! extern crate log_reroute;
 //! extern crate tempfile;
-//!
-//! use std::fs::OpenOptions;
 //!
 //! use fern::Dispatch;
 //! use log::LevelFilter;
