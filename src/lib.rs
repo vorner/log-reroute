@@ -1,5 +1,5 @@
 #![doc(
-    html_root_url = "https://docs.rs/log-reroute/0.1.0/log-reroute/", test(attr(deny(warnings)))
+    html_root_url = "https://docs.rs/log-reroute/0.1.1/log-reroute/", test(attr(deny(warnings)))
 )]
 #![deny(missing_docs)]
 #![deny(unsafe_code)] // Unfortunately, lazy_static contains unsafe, so we can't use forbid :-(
