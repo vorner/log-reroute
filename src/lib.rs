@@ -107,13 +107,13 @@ impl Reroute {
 
 impl Log for Reroute {
     fn enabled(&self, metadata: &Metadata) -> bool {
-        self.inner.load().enabled(metadata)
+        self.inner.lease().enabled(metadata)
     }
     fn log(&self, record: &Record) {
-        self.inner.load().log(record)
+        self.inner.lease().log(record)
     }
     fn flush(&self) {
-        self.inner.load().flush()
+        self.inner.lease().flush()
     }
 }
 
