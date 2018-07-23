@@ -1,4 +1,6 @@
-#![doc(html_root_url = "https://docs.rs/log-reroute/0.1.0/log-reroute/")]
+#![doc(
+    html_root_url = "https://docs.rs/log-reroute/0.1.0/log-reroute/", test(attr(deny(warnings)))
+)]
 #![deny(missing_docs)]
 #![deny(unsafe_code)] // Unfortunately, lazy_static contains unsafe, so we can't use forbid :-(
 
@@ -16,8 +18,7 @@
 //! #[macro_use]
 //! extern crate log;
 //! extern crate log_reroute;
-//!
-//! use std::fs::OpenOptions;
+//! extern crate tempfile;
 //!
 //! use fern::Dispatch;
 //! use log::LevelFilter;
@@ -32,12 +33,7 @@
 //!     log_reroute::reroute_boxed(early_logger);
 //!     info!("This one goes to stderr");
 //!     // Load file name from config and log to that file
-//!     let file = OpenOptions::new()
-//!         .create(true)
-//!         .write(true)
-//!         .append(true)
-//!         .open("/dev/null")
-//!         .expect("Failed to write log file");
+//!     let file = tempfile::tempfile().unwrap();
 //!     let logger = Dispatch::new().chain(file).into_log().1;
 //!     log_reroute::reroute_boxed(logger);
 //!     info!("And this one to the file");
