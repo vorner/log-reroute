@@ -1,5 +1,6 @@
 #![doc(html_root_url = "https://docs.rs/log-reroute/0.1.0/log-reroute/")]
 #![deny(missing_docs)]
+#![deny(unsafe_code)] // Unfortunately, lazy_static contains unsafe, so we can't use forbid :-(
 
 //! Crate to reroute logging messages at runtime.
 //!
