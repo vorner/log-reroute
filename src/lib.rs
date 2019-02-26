@@ -1,8 +1,9 @@
 #![doc(
-    html_root_url = "https://docs.rs/log-reroute/0.1.1/log-reroute/", test(attr(deny(warnings)))
+    html_root_url = "https://docs.rs/log-reroute/0.1.2/log-reroute/",
+    test(attr(deny(warnings)))
 )]
 #![deny(missing_docs)]
-#![deny(unsafe_code)] // Unfortunately, lazy_static contains unsafe, so we can't use forbid :-(
+#![forbid(unsafe_code)]
 
 //! Crate to reroute logging messages at runtime.
 //!
@@ -43,14 +44,15 @@
 //! ```
 
 extern crate arc_swap;
-#[macro_use]
-extern crate lazy_static;
 extern crate log;
+#[macro_use]
+extern crate once_cell;
 
 use std::sync::Arc;
 
 use arc_swap::ArcSwap;
 use log::{Log, Metadata, Record, SetLoggerError};
+use once_cell::sync::Lazy;
 
 /// A logger that doesn't log.
 ///
@@ -90,13 +92,20 @@ impl Reroute {
     ///
     /// In case it is already in a box, you should prefer this method over
     /// [`reroute`](#fn.reroute), since there'll be less indirection.
+    ///
+    /// The old logger (if any) is flushed before dropping. In general, loggers should flush
+    /// themselves on drop, but that may take time. This way we (mostly) ensure the cost of
+    /// flushing is payed here.
     pub fn reroute_boxed(&self, log: Box<Log>) {
-        self.inner.store(Arc::new(log));
+        let old = self.inner.swap(Arc::new(log));
+        old.flush();
     }
+
     /// Sets a new slave logger.
     pub fn reroute<L: Log + 'static>(&self, log: L) {
         self.reroute_boxed(Box::new(log));
     }
+
     /// Stubs out the logger.
     ///
     /// Sets the slave logger to one that does nothing (eg. [`Dummy`](struct.Dummy.html)).
@@ -126,16 +135,14 @@ impl Default for Reroute {
     }
 }
 
-lazy_static! {
-    /// A global [`Reroute`](struct.Reroute.html) object.
-    ///
-    /// This one is manipulated by the global functions:
-    ///
-    /// * [`init`](fn.init.html)
-    /// * [`reroute`](fn.reroute.html)
-    /// * [`reroute_boxed`](fn.reroute_boxed.html)
-    pub static ref REROUTE: Reroute = Reroute::default();
-}
+/// A global [`Reroute`](struct.Reroute.html) object.
+///
+/// This one is manipulated by the global functions:
+///
+/// * [`init`](fn.init.html)
+/// * [`reroute`](fn.reroute.html)
+/// * [`reroute_boxed`](fn.reroute_boxed.html)
+pub static REROUTE: Lazy<Reroute> = sync_lazy!(Reroute::default());
 
 /// Installs the global [`Reroute`](struct.Reroute.html) instance into the
 /// [`log`](https://crates.io/crates/log) facade.

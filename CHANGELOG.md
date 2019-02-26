@@ -1,3 +1,8 @@
+# 0.1.2
+
+* Flush the old logger after it gets replaced.
+* Some internal cleanups.
+
 # 0.1.1
 
 * Dependency updates
