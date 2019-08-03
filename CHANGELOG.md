@@ -1,3 +1,7 @@
+# 0.1.3
+
+* Dependency updates
+
 # 0.1.2
 
 * Flush the old logger after it gets replaced.

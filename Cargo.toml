@@ -1,6 +1,7 @@
 [package]
 name = "log-reroute"
-version = "0.1.2"
+edition = "2018"
+version = "0.1.3"
 authors = ["Michal 'vorner' Vaner <vorner@vorner.cz>"]
 description = "Support to change logging target for the log crate"
 documentation = "https://docs.rs/log-reroute"
@@ -16,11 +17,11 @@ appveyor = { repository = "vorner/log-reroute" }
 maintenance = { status = "actively-developed" }
 
 [dependencies]
-arc-swap = "~0.3"
+arc-swap = "~0.4"
 log = "~0.4"
-once_cell = "~0.1"
+once_cell = "~0.2"
 
 [dev-dependencies]
 fern = "~0.5"
-version-sync = "~0.5"
+version-sync = "~0.8"
 tempfile = "~3"

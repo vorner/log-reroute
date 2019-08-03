@@ -1,5 +1,5 @@
 #![doc(
-    html_root_url = "https://docs.rs/log-reroute/0.1.2/log-reroute/",
+    html_root_url = "https://docs.rs/log-reroute/0.1.3/log-reroute/",
     test(attr(deny(warnings)))
 )]
 #![deny(missing_docs)]
@@ -15,14 +15,8 @@
 //! This may be useful if you want to log to `stderr` before you know where the main logs will go.
 //!
 //! ```rust
-//! extern crate fern;
-//! #[macro_use]
-//! extern crate log;
-//! extern crate log_reroute;
-//! extern crate tempfile;
-//!
 //! use fern::Dispatch;
-//! use log::LevelFilter;
+//! use log::{info, LevelFilter};
 //!
 //! fn main() {
 //!     log::set_max_level(LevelFilter::Off);
@@ -42,11 +36,6 @@
 //!     log_reroute::reroute(log_reroute::Dummy);
 //! }
 //! ```
-
-extern crate arc_swap;
-extern crate log;
-#[macro_use]
-extern crate once_cell;
 
 use std::sync::Arc;
 
@@ -84,7 +73,7 @@ impl Log for Dummy {
 /// a message is written to the old logger and the new logger is flushed. This shouldn't matter in
 /// practice, since a logger should flush itself once it is dropped.
 pub struct Reroute {
-    inner: ArcSwap<Box<Log>>,
+    inner: ArcSwap<Box<dyn Log>>,
 }
 
 impl Reroute {
@@ -96,7 +85,7 @@ impl Reroute {
     /// The old logger (if any) is flushed before dropping. In general, loggers should flush
     /// themselves on drop, but that may take time. This way we (mostly) ensure the cost of
     /// flushing is payed here.
-    pub fn reroute_boxed(&self, log: Box<Log>) {
+    pub fn reroute_boxed(&self, log: Box<dyn Log>) {
         let old = self.inner.swap(Arc::new(log));
         old.flush();
     }
@@ -116,13 +105,13 @@ impl Reroute {
 
 impl Log for Reroute {
     fn enabled(&self, metadata: &Metadata) -> bool {
-        self.inner.lease().enabled(metadata)
+        self.inner.load().enabled(metadata)
     }
     fn log(&self, record: &Record) {
-        self.inner.lease().log(record)
+        self.inner.load().log(record)
     }
     fn flush(&self) {
-        self.inner.lease().flush()
+        self.inner.load().flush()
     }
 }
 
@@ -130,7 +119,7 @@ impl Default for Reroute {
     /// Creates a reroute with a [`Dummy`](struct.Dummy.html) slave logger.
     fn default() -> Self {
         Self {
-            inner: ArcSwap::from(Arc::new(Box::new(Dummy) as Box<Log>)),
+            inner: ArcSwap::from(Arc::new(Box::new(Dummy) as Box<dyn Log>)),
         }
     }
 }
@@ -142,7 +131,7 @@ impl Default for Reroute {
 /// * [`init`](fn.init.html)
 /// * [`reroute`](fn.reroute.html)
 /// * [`reroute_boxed`](fn.reroute_boxed.html)
-pub static REROUTE: Lazy<Reroute> = sync_lazy!(Reroute::default());
+pub static REROUTE: Lazy<Reroute> = Lazy::new(Reroute::default);
 
 /// Installs the global [`Reroute`](struct.Reroute.html) instance into the
 /// [`log`](https://crates.io/crates/log) facade.
@@ -161,6 +150,6 @@ pub fn reroute<L: Log + 'static>(log: L) {
 }
 
 /// Changes the slave of the global [`Reroute`](struct.Reroute.html) instance.
-pub fn reroute_boxed(log: Box<Log>) {
+pub fn reroute_boxed(log: Box<dyn Log>) {
     REROUTE.reroute_boxed(log)
 }
