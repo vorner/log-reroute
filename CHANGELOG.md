@@ -1,3 +1,7 @@
+# 0.1.4
+
+* Dependency updates
+
 # 0.1.3
 
 * Dependency updates
