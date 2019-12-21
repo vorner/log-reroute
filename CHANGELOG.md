@@ -1,4 +1,5 @@
-* Reroute::new() (the same as default, but more discoverable)
+* Reroute::get() to access the current logger.
+* Reroute::new() (the same as default, but more discoverable).
 
 # 0.1.4
 

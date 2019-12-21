@@ -109,6 +109,17 @@ impl Reroute {
     pub fn clear(&self) {
         self.reroute(Dummy);
     }
+
+    /// Gives access to the inner logger.
+    ///
+    /// # Notes
+    ///
+    /// The logger may be still in use by other threads, etc. It may be in use even after the
+    /// current thread called [`clear`][Reroute::clear] or [`reroute`][Reroute::reroute], at least
+    /// for a while.
+    pub fn get(&self) -> Arc<Box<dyn Log>> {
+        Arc::clone(&self.inner.load())
+    }
 }
 
 impl Log for Reroute {
