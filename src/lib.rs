@@ -77,6 +77,14 @@ pub struct Reroute {
 }
 
 impl Reroute {
+    /// Creates a new [`Reroute`] logger.
+    ///
+    /// No destination is set yet (it's sent to the [`Dummy`] instance), therefore all log messages
+    /// are thrown away.
+    pub fn new() -> Self {
+        Default::default()
+    }
+
     /// Sets a new slave logger.
     ///
     /// In case it is already in a box, you should prefer this method over

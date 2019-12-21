@@ -1,3 +1,5 @@
+* Reroute::new() (the same as default, but more discoverable)
+
 # 0.1.4
 
 * Dependency updates
