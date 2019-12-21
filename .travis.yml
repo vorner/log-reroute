@@ -5,13 +5,14 @@ rust:
     - beta
     - nightly
 os:
+    - windows
     - linux
     - osx
 
 before_script:
     - |
       (travis_wait rustup component add rustfmt-preview || true) &&
-      (test "$TRAVIS_RUST_VERSION" != nightly || travis_wait rustup component add clippy-preview || true)
+      (travis_wait rustup component add clippy-preview || true)
 
 script:
     - |
@@ -21,8 +22,8 @@ script:
       cargo build &&
       cargo test &&
       cargo doc --no-deps &&
-      (test "$TRAVIS_RUST_VERSION" != nightly || cargo clippy -- --deny clippy) &&
-      (test "$TRAVIS_RUST_VERSION" != nightly || cargo fmt)
+      cargo clippy -- --deny clippy &&
+      cargo fmt
 
 matrix:
     allow_failures:
