@@ -1,3 +1,5 @@
+# 0.1.5
+
 * Reroute::get() to access the current logger.
 * Reroute::new() (the same as default, but more discoverable).
 
