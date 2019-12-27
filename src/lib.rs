@@ -61,17 +61,8 @@ impl Log for Dummy {
 /// This logger forwards all calls to currently configured slave logger.
 ///
 /// The log routing is implemented in a lock-less and wait-less manner. While not necessarily faster
-/// than using a mutex (unless there's a lot of contention and the slave logger also doesn't lock),
-/// it makes it usable in some weird places (like a signal handler).
-///
-/// The rerouting (eg. changing the slave) is lock-less, but may have to wait for current logging
-/// calls to end and concurrent reroutes will block each other.
-///
-/// # Note
-///
-/// When switching a logger, no care is taken to pair logging calls. In other words, it is possible
-/// a message is written to the old logger and the new logger is flushed. This shouldn't matter in
-/// practice, since a logger should flush itself once it is dropped.
+/// than using a mutex, the performance should be more predictable and stable in face of contention
+/// from multiple threads. This assumes the slave logger also doesn't lock.
 pub struct Reroute {
     inner: ArcSwap<Box<dyn Log>>,
 }
@@ -92,13 +83,23 @@ impl Reroute {
     ///
     /// The old logger (if any) is flushed before dropping. In general, loggers should flush
     /// themselves on drop, but that may take time. This way we (mostly) ensure the cost of
-    /// flushing is payed here.
+    /// flushing is paid here.
     pub fn reroute_boxed(&self, log: Box<dyn Log>) {
-        let old = self.inner.swap(Arc::new(log));
+        self.reroute_arc(Arc::new(log))
+    }
+
+    /// Sets a slave logger.
+    ///
+    /// Another variant of [`reroute_boxed`][Reroute::reroute_boxed], accepting the inner
+    /// representation. This can be combined with a previous [`get`][Reroute::get].
+    pub fn reroute_arc(&self, log: Arc<Box<dyn Log>>) {
+        let old = self.inner.swap(log);
         old.flush();
     }
 
     /// Sets a new slave logger.
+    ///
+    /// See [`reroute_boxed`][Reroute::reroute_boxed] for more details.
     pub fn reroute<L: Log + 'static>(&self, log: L) {
         self.reroute_boxed(Box::new(log));
     }
