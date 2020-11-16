@@ -1,5 +1,5 @@
 #![doc(
-    html_root_url = "https://docs.rs/log-reroute/0.1.5/log-reroute/",
+    html_root_url = "https://docs.rs/log-reroute/0.1.6/log-reroute/",
     test(attr(deny(warnings)))
 )]
 #![deny(missing_docs)]

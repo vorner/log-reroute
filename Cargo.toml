@@ -1,7 +1,7 @@
 [package]
 name = "log-reroute"
 edition = "2018"
-version = "0.1.5"
+version = "0.1.6"
 authors = ["Michal 'vorner' Vaner <vorner@vorner.cz>"]
 description = "Support to change logging target for the log crate"
 documentation = "https://docs.rs/log-reroute"
@@ -16,7 +16,7 @@ travis-ci = { repository = "vorner/log-reroute" }
 maintenance = { status = "actively-developed" }
 
 [dependencies]
-arc-swap = "~0.4"
+arc-swap = "~1"
 log = "~0.4"
 once_cell = "~1"
 
