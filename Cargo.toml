@@ -1,7 +1,7 @@
 [package]
 name = "log-reroute"
 edition = "2018"
-version = "0.1.6"
+version = "0.1.7"
 authors = ["Michal 'vorner' Vaner <vorner@vorner.cz>"]
 description = "Support to change logging target for the log crate"
 documentation = "https://docs.rs/log-reroute"
@@ -10,10 +10,6 @@ readme = "README.md"
 keywords = ["logging"]
 categories = ["development-tools::debugging"]
 license = "Apache-2.0/MIT"
-
-[badges]
-travis-ci = { repository = "vorner/log-reroute" }
-maintenance = { status = "actively-developed" }
 
 [dependencies]
 arc-swap = "~1"
