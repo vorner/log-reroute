@@ -1,8 +1,5 @@
-#![doc(
-    html_root_url = "https://docs.rs/log-reroute/0.1.6/log-reroute/",
-    test(attr(deny(warnings)))
-)]
-#![deny(missing_docs)]
+#![doc(test(attr(deny(warnings))))]
+#![warn(missing_docs)]
 #![forbid(unsafe_code)]
 
 //! Crate to reroute logging messages at runtime.
@@ -19,7 +16,8 @@
 //! use log::{info, LevelFilter};
 //!
 //! fn main() {
-//!     log::set_max_level(LevelFilter::Off);
+//!     // Enable logging of Debug and more severe messages.
+//!     log::set_max_level(LevelFilter::Debug);
 //!     info!("This log message goes nowhere");
 //!     log_reroute::init().unwrap();
 //!     info!("Still goes nowhere");
