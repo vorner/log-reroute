@@ -1,8 +1,5 @@
-#![doc(
-    html_root_url = "https://docs.rs/log-reroute/0.1.6/log-reroute/",
-    test(attr(deny(warnings)))
-)]
-#![deny(missing_docs)]
+#![doc(test(attr(deny(warnings))))]
+#![warn(missing_docs)]
 #![forbid(unsafe_code)]
 
 //! Crate to reroute logging messages at runtime.
