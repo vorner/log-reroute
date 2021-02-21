@@ -1,3 +1,4 @@
+* Fix example.
 * Move to github actions.
 
 # 0.1.6

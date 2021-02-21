@@ -16,7 +16,8 @@
 //! use log::{info, LevelFilter};
 //!
 //! fn main() {
-//!     log::set_max_level(LevelFilter::Off);
+//!     // Enable logging of Debug and more severe messages.
+//!     log::set_max_level(LevelFilter::Debug);
 //!     info!("This log message goes nowhere");
 //!     log_reroute::init().unwrap();
 //!     info!("Still goes nowhere");
