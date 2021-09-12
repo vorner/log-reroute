@@ -1,3 +1,7 @@
+# 0.1.8
+
+* Lints about double allocation + explanation.
+
 # 0.1.7
 
 * Fix example.
