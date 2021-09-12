@@ -1,6 +1,9 @@
 #![doc(test(attr(deny(warnings))))]
 #![warn(missing_docs)]
 #![forbid(unsafe_code)]
+// We have Arc<Box<dyn ...>>. It is redundant allocation from a PoV, but arc-swap needs
+// Arc<S: Sized>, so we don't have much choice in that matter.
+#![allow(clippy::redundant_allocation)]
 
 //! Crate to reroute logging messages at runtime.
 //!
@@ -90,6 +93,9 @@ impl Reroute {
     ///
     /// Another variant of [`reroute_boxed`][Reroute::reroute_boxed], accepting the inner
     /// representation. This can be combined with a previous [`get`][Reroute::get].
+    ///
+    /// Note that the `Arc<Box<dyn Log>>` (double indirection) is necessary evil, since arc-swap
+    /// can't accept `!Sized` types.
     pub fn reroute_arc(&self, log: Arc<Box<dyn Log>>) {
         let old = self.inner.swap(log);
         old.flush();
@@ -117,7 +123,7 @@ impl Reroute {
     /// current thread called [`clear`][Reroute::clear] or [`reroute`][Reroute::reroute], at least
     /// for a while.
     pub fn get(&self) -> Arc<Box<dyn Log>> {
-        Arc::clone(&self.inner.load())
+        self.inner.load_full()
     }
 }
 
